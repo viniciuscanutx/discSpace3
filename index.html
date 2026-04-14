@@ -473,6 +473,9 @@
             line-height: 1.5;
             max-height: 200px;
             overflow-y: auto;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-word;
         }
 
         .spotlight-footer {
@@ -491,14 +494,16 @@
 
         .sentiment-badge {
             font-family: var(--pixel-font);
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid var(--cyan-neon);
-            color: var(--cyan-neon);
+            color: #fff;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
             padding: 4px 8px;
             font-size: 16px;
             text-transform: uppercase;
             display: flex;
             align-items: center;
+            text-align: center;
             gap: 6px;
         }
 
@@ -638,7 +643,7 @@
             const [username, setUsername] = useState('AstroNauta_Br');
             
             const [selectedAlbum, setSelectedAlbum] = useState(null);
-            const [reviewText, setReviewText] = useState("This album makes me feel like I'm floating on a dancefloor in Saturn. One More Time is a masterpiece.");
+            const [reviewText, setReviewText] = useState("");
             const [customSentiment, setCustomSentiment] = useState('MELANCHOLY');
             const [selectedIcon, setSelectedIcon] = useState('👽');
             const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
@@ -849,7 +854,7 @@
                         <div className="review-input-container">
                             <textarea 
                                 className="review-text-area"
-                                placeholder="Escreva a sua Review..." 
+                                placeholder="Tente descrever seus sentimentos..." 
                                 maxLength={300}
                                 value={reviewText}
                                 onChange={(e) => setReviewText(e.target.value)}
