@@ -122,6 +122,7 @@
             flex-direction: column;
             gap: 8px;
             flex: 1;
+            min-width: 0;
         }
         
         .album-info-title {
@@ -132,13 +133,15 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 250px;
         }
 
         .album-info-artist {
             color: var(--cyan-neon);
             font-size: 14px;
             font-family: var(--text-font);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .album-info-date {
@@ -427,6 +430,9 @@
             font-family: var(--pixel-font);
             font-size: 28px;
             color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .spotlight-artist {
@@ -644,7 +650,7 @@
             
             const [selectedAlbum, setSelectedAlbum] = useState(null);
             const [reviewText, setReviewText] = useState("");
-            const [customSentiment, setCustomSentiment] = useState('MELANCHOLY');
+            const [customSentiment, setCustomSentiment] = useState('');
             const [selectedIcon, setSelectedIcon] = useState('👽');
             const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
             const [rating, setRating] = useState(5);
@@ -764,7 +770,7 @@
                 setSelectedAlbum(null);
                 setSearchTerm('');
                 setReviewText('');
-                setCustomSentiment('MELANCHOLY');
+                setCustomSentiment('');
                 setSelectedIcon('👽');
                 setRating(5);
 
@@ -830,14 +836,14 @@
                             ></div>
                             <div className="album-info-creation">
                                 {selectedAlbum && (
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                        <span className="album-info-title">{selectedAlbum.title}</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0 }}>
+                                        <span className="album-info-title" title={selectedAlbum.title}>{selectedAlbum.title}</span>
                                         {selectedAlbum.type === 'track' && selectedAlbum.collectionName && selectedAlbum.collectionName !== selectedAlbum.title && (
-                                            <span style={{color: '#aaa', fontSize: '13px', fontFamily: 'var(--text-font)'}}>{selectedAlbum.collectionName}</span>
+                                            <span style={{color: '#aaa', fontSize: '13px', fontFamily: 'var(--text-font)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} title={selectedAlbum.collectionName}>{selectedAlbum.collectionName}</span>
                                         )}
-                                        <span className="album-info-artist">
-                                            {selectedAlbum.artist}
-                                            <span className="type-badge" style={{fontSize: '10px', padding: '1px 4px', marginLeft: '8px'}}>
+                                        <span className="album-info-artist" style={{ display: 'flex', alignItems: 'center' }}>
+                                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={selectedAlbum.artist}>{selectedAlbum.artist}</span>
+                                            <span className="type-badge" style={{flexShrink: 0, fontSize: '10px', padding: '1px 4px', marginLeft: '8px'}}>
                                                 {selectedAlbum.type === 'track' ? '[MUSIC]' : '[ALBUM]'}
                                             </span>
                                         </span>
@@ -983,14 +989,14 @@
                                             className="spotlight-cover"
                                             style={activePost.coverUrl ? { backgroundImage: `url(${activePost.coverUrl})`} : { backgroundColor: '#222' }}
                                         ></div>
-                                        <div style={{display: 'flex', flexDirection: 'column', gap: '4px', flex:1}}>
-                                            <div className="spotlight-title">{activePost.album}</div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0 }}>
+                                            <div className="spotlight-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={activePost.album}>{activePost.album}</div>
                                             {activePost.type === 'track' && activePost.collectionName && activePost.collectionName !== activePost.album && (
-                                                <div style={{color: '#aaa', fontSize: '14px', fontFamily: 'var(--text-font)'}}>{activePost.collectionName}</div>
+                                                <div style={{color: '#aaa', fontSize: '16px', fontFamily: 'var(--text-font)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}} title={activePost.collectionName}>{activePost.collectionName}</div>
                                             )}
-                                            <div className="spotlight-artist">
-                                                {activePost.artist}
-                                                <span className="type-badge">
+                                            <div className="spotlight-artist" style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+                                                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={activePost.artist}>{activePost.artist}</span>
+                                                <span className="type-badge" style={{ flexShrink: 0, marginLeft: '8px' }}>
                                                     {activePost.type === 'track' ? '[MUSIC]' : '[ALBUM]'}
                                                 </span>
                                             </div>
