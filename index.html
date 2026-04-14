@@ -35,21 +35,32 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none;
+        }
+
+        @keyframes spaceScroll {
+            0% {
+                background-position: 0% 0%, 0% 0%, 0% 0%, 0 0;
+            }
+            100% {
+                /* As nebulosas se movem sutilmente, enquanto as estrelas viajam na tela */
+                background-position: 10% 20%, -10% -10%, 5% 15%, -1000px 1000px;
+            }
         }
 
         body {
             background-color: #030308;
-            /* Fundo Cósmico Profundo com Nebulosas */
+            /* Fundo Cósmico Profundo com Nebulosas e Estrelas SVG */
             background-image: 
                 radial-gradient(circle at 20% 40%, rgba(0, 100, 255, 0.15) 0%, transparent 40%),
                 radial-gradient(circle at 80% 20%, rgba(255, 100, 0, 0.1) 0%, transparent 40%),
                 radial-gradient(circle at 60% 80%, rgba(150, 0, 255, 0.1) 0%, transparent 50%),
-                url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 h2 v2 h-2 z M150 30 h1 v1 h-1 z M70 120 h2 v2 h-2 z M180 180 h1 v1 h-1 z M40 180 h1 v1 h-1 z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E");
+                url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 h2 v2 h-2 z M150 30 h1 v1 h-1 z M70 120 h2 v2 h-2 z M180 180 h1 v1 h-1 z M40 180 h1 v1 h-1 z' fill='%23ffffff' fill-opacity='0.2'/%3E%3C/svg%3E");
+            background-size: 100%, 100%, 100%, 400px 400px;
             color: #ffffff;
             height: 100vh;
             overflow: hidden;
             font-family: var(--pixel-font);
+            animation: spaceScroll 90s linear infinite;
         }
 
         /* CONTAINER PRINCIPAL: 2 COLUNAS */
@@ -67,9 +78,15 @@
         .creation-section {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 16px;
             z-index: 10;
+            overflow-y: auto; /* Caso passe do tamanho da tela */
+            padding-right: 8px;
         }
+
+        /* Oculta scrollbar na creation section mantendo scrolável */
+        .creation-section::-webkit-scrollbar { width: 6px; }
+        .creation-section::-webkit-scrollbar-thumb { background: var(--border-gray); border-radius: 4px; }
 
         .section-header {
             font-family: var(--pixel-font);
@@ -78,9 +95,11 @@
             text-shadow: 2px 2px 0 var(--deep-purple), -1px -1px 0 var(--cyan-neon);
             text-transform: uppercase;
             letter-spacing: 2px;
+            user-select: none;
+            margin-bottom: 8px;
         }
 
-        /* Álbum Ativo */
+        /* Álbum Ativo & Busca */
         .active-album-box {
             background: rgba(26, 26, 26, 0.85);
             border: 4px solid var(--border-gray);
@@ -88,24 +107,31 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            /* estilo de bordas de pixel em css */
             box-shadow: inset -2px -2px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.1);
+            position: relative;
         }
 
         .album-cover-pixel {
-            width: 72px;
-            height: 72px;
-            /* Placeholder para Daft Punk Discovery (Prata e Dourado) */
-            background: linear-gradient(135deg, #c0c0c0 50%, #ffd700 50%);
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
             border: 2px solid #000;
             box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            image-rendering: auto; 
+        }
+
+        .cover-fallback {
+            background: linear-gradient(135deg, #c0c0c0 50%, #ffd700 50%);
             image-rendering: pixelated;
         }
 
         .album-info-creation {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 8px;
+            flex: 1;
         }
         
         .album-info-title {
@@ -113,85 +139,223 @@
             font-size: 26px;
             color: #fff;
             text-shadow: 1px 1px 0 #000;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
         }
 
-        .album-info-dropdown {
-            font-family: var(--pixel-font);
-            font-size: 20px;
+        .album-info-artist {
+            color: var(--cyan-neon);
+            font-size: 14px;
+            font-family: var(--text-font);
+        }
+
+        .album-info-date {
             color: var(--light-gray);
+            font-size: 12px;
+            font-family: var(--text-font);
+        }
+
+        .clear-selection-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            color: #888;
             cursor: pointer;
+            font-size: 16px;
+            transition: color 0.1s;
+            z-index: 20;
+            user-select: none;
+        }
+
+        .clear-selection-btn:hover {
+            color: #ff3333;
+            transform: scale(1.2);
+        }
+
+        .search-input {
+            background: rgba(0,0,0,0.5);
+            border: 2px solid var(--border-gray);
+            color: var(--cyan-neon);
+            font-family: var(--text-font);
+            font-size: 12px;
+            padding: 6px;
+            width: 100%;
+            outline: none;
+        }
+        .search-input:focus {
+            border-color: var(--cyan-neon);
+        }
+
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: -4px;
+            right: -4px;
+            background: #111;
+            border: 4px solid var(--border-gray);
+            border-top: none;
+            z-index: 50;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-        
-        .album-info-dropdown:hover {
-            color: #fff;
+            gap: 12px;
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
         }
 
-        /* Caixa de Texto do Review */
+        .search-result-item:hover {
+            background: rgba(0, 243, 255, 0.1);
+        }
+
+        .search-result-cover { width: 40px; height: 40px; }
+
+        /* A CAIXA EXCLUSIVA DE REVIEW (Neon Azul) */
         .review-input-container {
             flex: 1;
+            min-height: 180px; 
             background: rgba(10, 11, 26, 0.8);
             border: 4px solid var(--cyan-neon);
             box-shadow: 
                 0 0 15px var(--cyan-glow),
                 inset 0 0 20px rgba(0, 243, 255, 0.1);
-            padding: 24px;
-            position: relative;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .review-text-content {
+        .review-text-area {
+            background: transparent;
+            border: none;
+            color: #fff;
             font-family: var(--text-font);
             font-size: 16px;
             line-height: 1.6;
-            color: #fff;
+            resize: none;
+            flex: 1;
+            outline: none;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 18px;
-            background-color: var(--cyan-neon);
-            vertical-align: text-bottom;
-            animation: blink 1s step-end infinite;
-            margin-left: 4px;
+        /* A DIV SEPARADA DA NOTA (Rating) */
+        .rating-container {
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--border-gray);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.1);
         }
 
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-        /* Icones de Mood */
-        .mood-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-top: auto; /* Empurra pra baixo */
+        .rating-label {
+            font-family: var(--pixel-font);
+            color: var(--light-gray);
+            font-size: 20px;
+            text-transform: uppercase;
         }
 
-        .mood-item {
+        .stars-selector {
+            display: flex;
+            gap: 4px;
+        }
+
+        .stars-selector span {
+            cursor: pointer;
+            font-size: 24px;
+            transition: color 0.1s;
+        }
+
+        .stars-selector span:hover {
+            transform: scale(1.1);
+        }
+
+        /* A CAIXA STATUS REPORT (Ícone + Sentimento) */
+        .status-report-container {
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid var(--border-gray);
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 8px;
-            border: 2px solid transparent;
+            gap: 12px;
+            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.1);
         }
 
-        .mood-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px dashed var(--border-gray);
-        }
-
-        .mood-icon {
-            font-size: 32px;
-            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.8));
-        }
-
-        .mood-label {
-            font-size: 18px;
+        .status-label {
             color: var(--light-gray);
+            font-size: 20px;
             text-transform: uppercase;
+            font-family: var(--pixel-font);
+        }
+
+        .status-input-row {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+            height: 48px;
+        }
+
+        .selected-icon-box {
+            background: #111;
+            border: 2px outset #555;
+            min-width: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        .sentiment-text-input {
+            flex: 1;
+            background: #1a1a1a;
+            border: 2px inset #333;
+            color: var(--yellow-star);
+            font-family: var(--pixel-font);
+            font-size: 20px;
+            padding: 8px 12px;
+            outline: none;
+            text-transform: uppercase;
+        }
+
+        .sentiment-text-input:focus {
+            border-color: var(--cyan-neon);
+        }
+
+        .icon-picker-popup {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            background: rgba(10, 10, 10, 0.95);
+            border: 2px solid var(--border-gray);
+            padding: 8px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            width: 220px;
+            z-index: 100;
+            margin-bottom: 8px;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.8);
+        }
+
+        .mini-icon {
+            cursor: pointer;
+            background: #222;
+            border: 1px solid #444;
+            padding: 6px;
+            font-size: 18px;
+            user-select: none;
+        }
+
+        .mini-icon:hover, .mini-icon.active {
+            border-color: var(--cyan-neon);
+            background: rgba(0, 243, 255, 0.1);
+            transform: scale(1.1);
         }
 
         /* Botão Launch */
@@ -263,6 +427,12 @@
             flex-direction: column;
             gap: 16px;
             z-index: 20;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) scale(1.1) translateY(0); }
+            50% { transform: translate(-50%, -50%) scale(1.1) translateY(-10px); }
         }
 
         .spotlight-header {
@@ -273,8 +443,8 @@
         .spotlight-cover {
             width: 80px;
             height: 80px;
-            /* Placeholder para In Rainbows */
-            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: cover;
+            background-position: center;
             border: 2px solid #fff;
         }
 
@@ -282,6 +452,7 @@
             font-family: var(--pixel-font);
             font-size: 26px;
             color: #fff;
+            word-wrap: break-word;
         }
 
         .spotlight-artist {
@@ -289,11 +460,49 @@
             font-size: 20px;
         }
 
+        .type-badge {
+            font-family: var(--pixel-font);
+            font-size: 14px;
+            color: #fff;
+            margin-left: 12px;
+            background: var(--deep-purple);
+            border: 2px outset var(--orange-nebula);
+            padding: 2px 6px;
+            vertical-align: middle;
+            text-shadow: none;
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .vinyl-record {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 160px;
+            height: 160px;
+            background: 
+                radial-gradient(circle, #030308 0%, #030308 8%, transparent 8%), /* Furo central */
+                radial-gradient(circle, var(--orange-nebula) 8%, var(--deep-purple) 28%, transparent 28%), /* Selo do Disco */
+                repeating-radial-gradient(circle, #111 0%, #111 3px, #222 4px, #111 5px); /* Sulcos */
+            border-radius: 50%;
+            box-shadow: 
+                0 0 0 4px #000,
+                0 0 40px var(--cyan-glow);
+            z-index: 5;
+            animation: spin-vinyl 3s linear infinite;
+        }
+
+        @keyframes spin-vinyl {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
         .spotlight-text {
             font-family: var(--text-font);
             font-size: 14px;
             color: #ddd;
             line-height: 1.5;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .spotlight-footer {
@@ -307,6 +516,7 @@
         .stars {
             color: var(--yellow-star);
             font-size: 18px;
+            user-select: none;
         }
 
         .sentiment-badge {
@@ -316,6 +526,10 @@
             color: var(--cyan-neon);
             padding: 4px 8px;
             font-size: 16px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         /* Cards Flutuantes Caóticos */
@@ -334,15 +548,17 @@
         }
 
         .floating-review:hover {
-            transform: scale(1.1);
-            border-color: #fff;
+            transform: scale(1.2);
+            border-color: var(--cyan-neon);
             z-index: 30;
+            box-shadow: 0 0 15px var(--cyan-glow);
         }
 
         .mini-cover {
             width: 40px;
             height: 40px;
             border: 1px solid #000;
+            background-size: cover;
         }
 
         /* Perfil do Usuário */
@@ -403,9 +619,9 @@
 
         .xp-bar-fill {
             height: 100%;
-            width: 85%;
             background: linear-gradient(90deg, #ff6a00, #ffea00);
             border-right: 2px solid #fff;
+            transition: width 0.5s ease-out;
         }
     </style>
 </head>
@@ -414,19 +630,27 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        // Os Ícones
-        const MOODS = [
-            { id: 'melancholy', icon: '💧', label: 'MELANCHOLY' },
-            { id: 'euphoria', icon: '✨', label: 'EUPHORIA' },
-            { id: 'pensive', icon: '🧡', label: 'PENSIVE' },
-            { id: 'aggressive', icon: '⚔️', label: 'AGGRESSIVE' }
-        ];
+        const { useState, useEffect, useRef } = React;
 
-        // Componentes para o Background Espacial Caótico
-        const FloatingReview = ({ top, left, delay, coverColor }) => (
-            <div className="floating-review" style={{ top, left, animation: `drift 10s infinite alternate ease-in-out ${delay}` }}>
-                <div className="mini-cover" style={{ background: coverColor }}></div>
-                <div style={{ fontSize: '12px', color: '#888' }}>[...]</div>
+        const AVAILABLE_ICONS = ['💧','✨','🧡','⚔️','👽','💀','🖤','🍄','🥀','🚀','🎶','🔮', '🔥', '🧠'];
+
+        // Card Flutuante Interativo
+        const FloatingReview = ({ top, left, delay, review, onSelect }) => (
+            <div 
+                className="floating-review" 
+                style={{ top, left, animation: `drift 10s infinite alternate ease-in-out ${delay}` }}
+                onClick={() => onSelect(review)}
+                title={review.album}
+            >
+                <div 
+                    className="mini-cover" 
+                    style={{ 
+                        backgroundImage: review.coverUrl ? `url(${review.coverUrl})` : 'linear-gradient(45deg, #222, #555)' 
+                    }}
+                >
+                    {!review.coverUrl && <span style={{fontSize: '12px'}}>{review.icon}</span>}
+                </div>
+                <div style={{ fontSize: '10px', color: '#888', marginTop: '4px' }}>LVL.{review.xp}</div>
                 <style>{`
                     @keyframes drift { 0% { transform: translateY(0); } 100% { transform: translateY(-15px) rotate(3deg); } }
                 `}</style>
@@ -434,40 +658,262 @@
         );
 
         function SoundExplorer() {
-            const reviewText = "This album makes me feel like I'm floating on a dancefloor in Saturn. One More Time is a masterpiece.";
+            const [selectedAlbum, setSelectedAlbum] = useState(null);
+            const [reviewText, setReviewText] = useState("This album makes me feel like I'm floating on a dancefloor in Saturn. One More Time is a masterpiece.");
+            const [customSentiment, setCustomSentiment] = useState('MELANCHOLY');
+            const [selectedIcon, setSelectedIcon] = useState('👽');
+            const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
+            const [rating, setRating] = useState(5);
+
+            // Busca de Álbuns na ITUNES API
+            const [searchTerm, setSearchTerm] = useState('');
+            const [searchResults, setSearchResults] = useState([]);
+            const [isSearching, setIsSearching] = useState(false);
+
+            // Interface
+            const searchTimeoutRef = useRef(null);
             
+            // Post Ativo & Lista Caótica
+            const mockData = [
+                {
+                    id: 1,
+                    type: 'album',
+                    album: 'In Rainbows',
+                    artist: 'Radiohead',
+                    text: 'Mergulho profundo na melancolia imersiva. Uma obra-prima de produção. Cuidado com o oxigênio! A transição rítmica em "15 Step" ainda quebra minha mente.',
+                    sentiment: 'MELANCOLIA',
+                    icon: '💧',
+                    rating: 5,
+                    coverUrl: 'https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/4a/4c/cb/4a4ccbb2-b67f-4b07-dded-d39b8b1effa6/191428135080.jpg/400x400cc.jpg',
+                    xp: 45
+                },
+                {
+                    id: 2,
+                    type: 'track',
+                    album: 'blonde.',
+                    track: 'Nights',
+                    artist: 'Frank Ocean',
+                    text: 'Mergulho profundo na melancolia imersiva. Uma obra-prima de produção. Cuidado com o oxigênio! A transição rítmica em "15 Step" ainda quebra minha mente.',
+                    sentiment: 'MELANCOLIA',
+                    icon: '💧',
+                    rating: 5,
+                    coverUrl: 'https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/7f/8a/40/7f8a403d-946d-9f67-888e-5543494e3046/190758758131.jpg/400x400cc.jpg',
+                    xp: 30
+                }
+            ];
+
+            const [activePost, setActivePost] = useState(mockData[0]);
+
+            const [chaosReviews, setChaosReviews] = useState([
+               { id: 1, top: '10%', left: '15%', delay: '0s', review: mockData[0] },
+               { id: 2, top: '70%', left: '40%', delay: '-2s', review: mockData[1] }
+            ]);
+
+            const [userXp, setUserXp] = useState(1);
+            const [xpProgress, setXpProgress] = useState(20);
+
+            // Busca na API da Apple Music (iTunes) sem apiKey!
+            useEffect(() => {
+                if (searchTerm.trim().length < 3) {
+                    setSearchResults([]);
+                    return;
+                }
+
+                if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+                
+                searchTimeoutRef.current = setTimeout(async () => {
+                    setIsSearching(true);
+                    try {
+                        // Removido entity=album e adicionado media=music para retornar músicas (tracks) e álbuns
+                        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&media=music&limit=15`;
+                        const response = await fetch(url);
+                        const data = await response.json();
+                        setSearchResults(data.results || []);
+                    } catch (err) {
+                        console.error('Falha na busca:', err);
+                    } finally {
+                        setIsSearching(false);
+                    }
+                }, 500);
+                
+            }, [searchTerm]);
+
+            const selectAlbumFromSearch = (item) => {
+                // Se trackName existir, é uma música, senão é um álbum
+                setSelectedAlbum({
+                    title: item.trackName || item.collectionName,
+                    artist: item.artistName,
+                    coverUrl: item.artworkUrl100.replace('100x100', '400x400'),
+                    type: item.wrapperType, // 'track' ou 'collection', deixei pronto no objeto pra você incluir a sua tag!
+                    releaseDate: item.releaseDate ? item.releaseDate.substring(0,4) : ''
+                });
+                setSearchTerm('');
+                setSearchResults([]);
+            };
+
+            const handleLaunch = () => {
+                if(!selectedAlbum) return alert('Selecione uma música ou álbum antes de lançar!');
+                if(!reviewText.trim()) return;
+
+                const novoReview = {
+                    type: selectedAlbum.type,
+                    album: selectedAlbum.title,
+                    artist: selectedAlbum.artist,
+                    coverUrl: selectedAlbum.coverUrl,
+                    text: reviewText,
+                    sentiment: customSentiment || '',
+                    icon: selectedIcon,
+                    rating: rating,
+                    xp: Math.floor(Math.random() * 50) + 10
+                };
+
+                setActivePost(novoReview);
+
+                // Reset forms
+                setSelectedAlbum(null);
+                setSearchTerm('');
+                setReviewText('');
+                setCustomSentiment('MELANCHOLY');
+                setSelectedIcon('👽');
+                setRating(5);
+
+                const newChaosItem = {
+                    id: Date.now(),
+                    top: (Math.random() * 70 + 5) + '%',
+                    left: (Math.random() * 75 + 5) + '%',
+                    delay: -(Math.random() * 10) + 's',
+                    review: novoReview
+                };
+
+                setChaosReviews([...chaosReviews, newChaosItem]);
+
+                // Update Level/XP
+                let newProgress = xpProgress + novoReview.xp;
+                if(newProgress >= 100) {
+                    setUserXp(userXp + 1);
+                    newProgress = newProgress - 100;
+                }
+                setXpProgress(newProgress);
+            };
+
+            const renderStars = (count) => {
+                return "★".repeat(count) + "☆".repeat(5 - count);
+            };
+
             return (
                 <React.Fragment>
                     {/* SEÇÃO 1: CREATION */}
                     <div className="creation-section">
                         <div className="section-header">"Creation"</div>
                         
+                        {/* Box de Seleção de Álbum */}
                         <div className="active-album-box">
-                            <div className="album-cover-pixel"></div>
+                            {selectedAlbum && (
+                                <div 
+                                    className="clear-selection-btn"
+                                    onClick={() => setSelectedAlbum(null)}
+                                    title="Remover Seleção"
+                                >✖</div>
+                            )}
+                            <div 
+                                className={`album-cover-pixel ${!selectedAlbum || !selectedAlbum.coverUrl ? 'cover-fallback' : ''}`}
+                                style={selectedAlbum && selectedAlbum.coverUrl ? { backgroundImage: `url(${selectedAlbum.coverUrl})`} : {}}
+                            ></div>
                             <div className="album-info-creation">
-                                <span className="album-info-title">Daft Punk - Discovery</span>
-                                <span className="album-info-dropdown">
-                                    Select Album... <span style={{fontSize: '14px'}}>▶</span>
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="review-input-container">
-                            <div className="review-text-content">
-                                {reviewText}<span className="cursor"></span>
-                            </div>
-                        </div>
-
-                        <div className="mood-grid">
-                            {MOODS.map(mood => (
-                                <div className="mood-item" key={mood.id}>
-                                    <span className="mood-icon">{mood.icon}</span>
-                                    <span className="mood-label">{mood.label}</span>
+                                {selectedAlbum && (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                        <span className="album-info-title">{selectedAlbum.title}</span>
+                                        <span className="album-info-artist">{selectedAlbum.artist}</span>
+                                        <span className="album-info-date">{selectedAlbum.releaseDate}</span>
+                                    </div>
+                                )}
+                                
+                                <div style={{position: 'relative', marginTop: selectedAlbum ? '8px' : '0'}}>
+                                    <input 
+                                        className="search-input" 
+                                        placeholder="Musica ou Album..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                    {isSearching && <div className="search-dropdown"><div style={{padding: '8px'}}>Buscando sinais...</div></div>}
+                                    {searchResults.length > 0 && (
+                                        <div className="search-dropdown">
+                                            {searchResults.map(res => (
+                                                <div className="search-result-item" key={res.trackId || res.collectionId} onClick={() => selectAlbumFromSearch(res)}>
+                                                    <img src={res.artworkUrl100} className="search-result-cover" />
+                                                    <div style={{flex: 1, overflow: 'hidden'}}>
+                                                        <div style={{color: '#fff', fontSize: '14px', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden'}}>{res.trackName || res.collectionName}</div>
+                                                        <div style={{color: '#888', fontSize: '12px'}}>{res.artistName}</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                            ))}
+                            </div>
                         </div>
 
-                        <button className="launch-btn">
+                        {/* CAIXA NEON AZUL SOMENTE PARA REVIEW */}
+                        <div className="review-input-container">
+                            <textarea 
+                                className="review-text-area"
+                                placeholder="Escreva a sua Review..." 
+                                value={reviewText}
+                                onChange={(e) => setReviewText(e.target.value)}
+                            ></textarea>
+                        </div>
+
+                        {/* DIV DA NOTA (RATING) */}
+                        <div className="rating-container">
+                            <span className="rating-label">RATING:</span>
+                            <div className="stars-selector">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <span 
+                                        key={star} 
+                                        onClick={() => setRating(star)}
+                                        style={{ color: star <= rating ? 'var(--yellow-star)' : '#444' }}
+                                    >★</span>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* CAIXA DE STATUS REPORT (ÍCONE E SENTIMENTO) */}
+                        <div className="status-report-container">
+                            <span className="status-label">STATUS REPORT</span>
+                            <div className="status-input-row" style={{position: 'relative'}}>
+                                <div 
+                                    className="selected-icon-box"
+                                    style={{cursor: 'pointer'}}
+                                    onClick={() => setIsIconPickerOpen(!isIconPickerOpen)}
+                                >
+                                    {selectedIcon}
+                                </div>
+                                {isIconPickerOpen && (
+                                    <div className="icon-picker-popup">
+                                        {AVAILABLE_ICONS.map(i => (
+                                            <span 
+                                                key={i} 
+                                                className={`mini-icon ${selectedIcon === i ? 'active' : ''}`}
+                                                onClick={() => {
+                                                    setSelectedIcon(i);
+                                                    setIsIconPickerOpen(false);
+                                                }}
+                                            >{i}</span>
+                                        ))}
+                                    </div>
+                                )}
+                                <input 
+                                    className="sentiment-text-input" 
+                                    type="text" 
+                                    placeholder="SEU SENTIMENTO..."
+                                    maxLength="20"
+                                    value={customSentiment}
+                                    onChange={(e) => setCustomSentiment(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <button className="launch-btn" onClick={handleLaunch}>
                             LAUNCH INTO SPACE
                         </button>
                     </div>
@@ -476,45 +922,69 @@
                     <div className="chaos-section">
 
                         <div className="chaos-space">
+                            <div className="vinyl-record"></div>
                             <div className="orbit-ring orbit-1"></div>
                             <div className="orbit-ring orbit-2"></div>
 
                             {/* Cards flutuantes no fundo */}
-                            <FloatingReview top="10%" left="15%" delay="0s" coverColor="#555" />
-                            <FloatingReview top="70%" left="5%" delay="1s" coverColor="#234" />
-                            <FloatingReview top="15%" left="80%" delay="2s" coverColor="#912" />
-                            <FloatingReview top="80%" left="75%" delay="0.5s" coverColor="#146" />
-                            <FloatingReview top="40%" left="85%" delay="1.5s" coverColor="#040" />
+                            {chaosReviews.map(item => (
+                                <FloatingReview 
+                                    key={item.id} 
+                                    top={item.top} 
+                                    left={item.left} 
+                                    delay={item.delay} 
+                                    review={item.review} 
+                                    onSelect={(rev) => setActivePost(rev)}
+                                />
+                            ))}
 
                             {/* O POST ATIVO */}
-                            <div className="active-post-spotlight">
-                                <div className="spotlight-header">
-                                    <div className="spotlight-cover"></div>
-                                    <div style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
-                                        <div className="spotlight-title">In Rainbows</div>
-                                        <div className="spotlight-artist">Radiohead</div>
+                            {activePost && (
+                                <div className="active-post-spotlight">
+                                    <div 
+                                        onClick={() => setActivePost(null)}
+                                        style={{position: 'absolute', top: '8px', right: '12px', cursor: 'pointer', color: '#888', fontSize: '20px', userSelect: 'none'}}
+                                        title="Close Review"
+                                    >✖</div>
+                                    <div className="spotlight-header">
+                                        <div 
+                                            className="spotlight-cover"
+                                            style={activePost.coverUrl ? { backgroundImage: `url(${activePost.coverUrl})`} : { backgroundColor: '#222' }}
+                                        ></div>
+                                        <div style={{display: 'flex', flexDirection: 'column', gap: '4px', flex:1}}>
+                                            <div className="spotlight-title">{activePost.album}</div>
+                                            <div className="spotlight-artist">
+                                                {activePost.artist}
+                                                <span className="type-badge">
+                                                    {activePost.type === 'track' ? '[MUSIC]' : '[ALBUM]'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="spotlight-text">
+                                        {activePost.text}
+                                    </div>
+                                    
+                                    <div className="spotlight-footer">
+                                        <div className="stars">{renderStars(activePost.rating)}</div>
+                                        <div className="sentiment-badge">
+                                            <span style={{fontSize:'20px'}}>{activePost.icon}</span> 
+                                            {activePost.sentiment}
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                <div className="spotlight-text">
-                                    Mergulho profundo na melancolia imersiva. Uma obra-prima de produção. Cuidado com o oxigênio! A transição rítmica em "15 Step" ainda quebra minha mente.
-                                </div>
-                                
-                                <div className="spotlight-footer">
-                                    <div className="stars">★★★★★</div>
-                                    <div className="sentiment-badge">SENTIMENTO ATUAL: MELANCHOLY</div>
-                                </div>
-                            </div>
+                            )}
                         </div>
 
                         {/* PERFIL */}
                         <div className="user-profile">
                             <div className="avatar-box">🤺</div>
                             <div className="profile-details">
-                                <div className="player-level">SOUND EXPLORER LV. 1</div>
+                                <div className="player-level">SOUND EXPLORER LV. {userXp}</div>
                                 <div className="xp-bar-wrapper">
                                     <span className="xp-label">XP</span>
-                                    <div className="xp-bar-fill"></div>
+                                    <div className="xp-bar-fill" style={{ width: `${xpProgress}%` }}></div>
                                 </div>
                             </div>
                         </div>
