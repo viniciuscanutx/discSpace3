@@ -731,8 +731,9 @@
                     collectionName: item.collectionName,
                     artist: item.artistName,
                     coverUrl: item.artworkUrl100.replace('100x100', '400x400'),
-                    type: item.wrapperType, // 'track' ou 'collection', deixei pronto no objeto pra você incluir a sua tag!
-                    releaseDate: item.releaseDate ? item.releaseDate.substring(0,4) : ''
+                    type: item.wrapperType,
+                    releaseDate: item.releaseDate ? item.releaseDate.substring(0,4) : '',
+                    previewUrl: item.previewUrl || null
                 });
                 setSearchTerm('');
                 setSearchResults([]);
@@ -748,6 +749,7 @@
                     collectionName: selectedAlbum.collectionName,
                     artist: selectedAlbum.artist,
                     coverUrl: selectedAlbum.coverUrl,
+                    previewUrl: selectedAlbum.previewUrl,
                     text: reviewText,
                     sentiment: customSentiment || '',
                     icon: selectedIcon,
@@ -784,6 +786,24 @@
                 }
                 setXpProgress(newProgress);
             };
+
+            // Player de Áudio Ambiente
+            useEffect(() => {
+                let audio = null;
+                if (activePost && activePost.previewUrl) {
+                    audio = new Audio(activePost.previewUrl);
+                    audio.volume = 0.15; // Volume bem baixo (15%)
+                    audio.play().catch(e => console.log('Autoplay bloqueado pelo navegador:', e));
+                }
+                
+                // Limpa o player quando fechar o card ou trocar
+                return () => {
+                    if (audio) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                };
+            }, [activePost]);
 
             const renderStars = (count) => {
                 return "★".repeat(count) + "☆".repeat(5 - count);
