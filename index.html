@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Explorer: Cosmic Vinyl</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* ESTUFA DE VARIÁVEIS CÓSMICAS */
+        :root {
+            --cyan-neon: #00f3ff;
+            --cyan-glow: rgba(0, 243, 255, 0.4);
+            --deep-navy: #0a0b1a;
+            --deep-purple: #1a0b2e;
+            --orange-nebula: #ff6a00;
+            --yellow-star: #ffea00;
+            --dark-gray: #1a1a1a;
+            --border-gray: #333333;
+            --light-gray: #b0b0b0;
+            --pixel-font: 'VT323', monospace;
+            --hud-font: 'Press Start 2P', monospace;
+            --text-font: 'Roboto Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: #030308;
+            /* Fundo Cósmico Profundo com Nebulosas */
+            background-image: 
+                radial-gradient(circle at 20% 40%, rgba(0, 100, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(255, 100, 0, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 60% 80%, rgba(150, 0, 255, 0.1) 0%, transparent 50%),
+                url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 h2 v2 h-2 z M150 30 h1 v1 h-1 z M70 120 h2 v2 h-2 z M180 180 h1 v1 h-1 z M40 180 h1 v1 h-1 z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E");
+            color: #ffffff;
+            height: 100vh;
+            overflow: hidden;
+            font-family: var(--pixel-font);
+        }
+
+        /* CONTAINER PRINCIPAL: 2 COLUNAS */
+        #root {
+            display: grid;
+            grid-template-columns: 460px 1fr;
+            width: 100vw;
+            height: 100vh;
+            padding: 40px;
+            gap: 40px;
+            position: relative;
+        }
+
+        /* ------- SEÇÃO 1: CREATION (ESQUERDA) ------- */
+        .creation-section {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            z-index: 10;
+        }
+
+        .section-header {
+            font-family: var(--pixel-font);
+            font-size: 42px;
+            color: #fff;
+            text-shadow: 2px 2px 0 var(--deep-purple), -1px -1px 0 var(--cyan-neon);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Álbum Ativo */
+        .active-album-box {
+            background: rgba(26, 26, 26, 0.85);
+            border: 4px solid var(--border-gray);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            /* estilo de bordas de pixel em css */
+            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.5), inset 2px 2px 0 rgba(255,255,255,0.1);
+        }
+
+        .album-cover-pixel {
+            width: 72px;
+            height: 72px;
+            /* Placeholder para Daft Punk Discovery (Prata e Dourado) */
+            background: linear-gradient(135deg, #c0c0c0 50%, #ffd700 50%);
+            border: 2px solid #000;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            image-rendering: pixelated;
+        }
+
+        .album-info-creation {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .album-info-title {
+            font-family: var(--pixel-font);
+            font-size: 26px;
+            color: #fff;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .album-info-dropdown {
+            font-family: var(--pixel-font);
+            font-size: 20px;
+            color: var(--light-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .album-info-dropdown:hover {
+            color: #fff;
+        }
+
+        /* Caixa de Texto do Review */
+        .review-input-container {
+            flex: 1;
+            background: rgba(10, 11, 26, 0.8);
+            border: 4px solid var(--cyan-neon);
+            box-shadow: 
+                0 0 15px var(--cyan-glow),
+                inset 0 0 20px rgba(0, 243, 255, 0.1);
+            padding: 24px;
+            position: relative;
+        }
+
+        .review-text-content {
+            font-family: var(--text-font);
+            font-size: 16px;
+            line-height: 1.6;
+            color: #fff;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background-color: var(--cyan-neon);
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+            margin-left: 4px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Icones de Mood */
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: auto; /* Empurra pra baixo */
+        }
+
+        .mood-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px;
+            border: 2px solid transparent;
+        }
+
+        .mood-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed var(--border-gray);
+        }
+
+        .mood-icon {
+            font-size: 32px;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.8));
+        }
+
+        .mood-label {
+            font-size: 18px;
+            color: var(--light-gray);
+            text-transform: uppercase;
+        }
+
+        /* Botão Launch */
+        .launch-btn {
+            background: #1a1a1a;
+            border: 4px outset #444;
+            color: #fff;
+            padding: 16px;
+            font-family: var(--pixel-font);
+            font-size: 28px;
+            text-transform: uppercase;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #000;
+            transition: all 0.1s;
+        }
+
+        .launch-btn:active {
+            border-style: inset;
+            box-shadow: 0 0 0 #000;
+            transform: translateY(4px);
+            color: var(--cyan-neon);
+        }
+
+        /* ------- SEÇÃO 2: CHAOS SCROLL E PERFIL (DIREITA) ------- */
+        .chaos-section {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chaos-header {
+            text-align: right;
+        }
+
+        .chaos-space {
+            flex: 1;
+            position: relative;
+        }
+
+        /* Linhas de Órbita Sutis */
+        .orbit-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 1px dashed rgba(0, 243, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .orbit-1 { width: 400px; height: 400px; animation: spin 40s linear infinite; }
+        .orbit-2 { width: 600px; height: 600px; border-style: dotted; animation: spin 60s linear infinite reverse; }
+
+        @keyframes spin { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+        /* O Post Ativo Em Destaque */
+        .active-post-spotlight {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.1);
+            background: rgba(10, 11, 26, 0.95);
+            border: 4px solid var(--cyan-neon);
+            box-shadow: 0 0 30px var(--cyan-glow);
+            padding: 24px;
+            width: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 20;
+        }
+
+        .spotlight-header {
+            display: flex;
+            gap: 16px;
+        }
+
+        .spotlight-cover {
+            width: 80px;
+            height: 80px;
+            /* Placeholder para In Rainbows */
+            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            border: 2px solid #fff;
+        }
+
+        .spotlight-title {
+            font-family: var(--pixel-font);
+            font-size: 26px;
+            color: #fff;
+        }
+
+        .spotlight-artist {
+            color: var(--cyan-neon);
+            font-size: 20px;
+        }
+
+        .spotlight-text {
+            font-family: var(--text-font);
+            font-size: 14px;
+            color: #ddd;
+            line-height: 1.5;
+        }
+
+        .spotlight-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed #444;
+            padding-top: 12px;
+        }
+
+        .stars {
+            color: var(--yellow-star);
+            font-size: 18px;
+        }
+
+        .sentiment-badge {
+            font-family: var(--pixel-font);
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--cyan-neon);
+            color: var(--cyan-neon);
+            padding: 4px 8px;
+            font-size: 16px;
+        }
+
+        /* Cards Flutuantes Caóticos */
+        .floating-review {
+            position: absolute;
+            background: rgba(20, 20, 20, 0.7);
+            border: 2px solid var(--border-gray);
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            backdrop-filter: blur(2px);
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .floating-review:hover {
+            transform: scale(1.1);
+            border-color: #fff;
+            z-index: 30;
+        }
+
+        .mini-cover {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #000;
+        }
+
+        /* Perfil do Usuário */
+        .user-profile {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.9);
+            border: 4px solid var(--border-gray);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 380px;
+            z-index: 50;
+        }
+
+        .avatar-box {
+            width: 64px;
+            height: 64px;
+            background: #222;
+            border: 3px solid #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+        }
+
+        .profile-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .player-level {
+            font-family: var(--pixel-font);
+            color: #fff;
+            font-size: 22px;
+            text-transform: uppercase;
+        }
+
+        .xp-bar-wrapper {
+            background: #111;
+            border: 2px solid #444;
+            height: 16px;
+            position: relative;
+            display: flex;
+        }
+        
+        .xp-label {
+            position: absolute;
+            left: -30px;
+            top: -2px;
+            font-size: 16px;
+            color: var(--yellow-star);
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            width: 85%;
+            background: linear-gradient(90deg, #ff6a00, #ffea00);
+            border-right: 2px solid #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Os Ícones
+        const MOODS = [
+            { id: 'melancholy', icon: '💧', label: 'MELANCHOLY' },
+            { id: 'euphoria', icon: '✨', label: 'EUPHORIA' },
+            { id: 'pensive', icon: '🧡', label: 'PENSIVE' },
+            { id: 'aggressive', icon: '⚔️', label: 'AGGRESSIVE' }
+        ];
+
+        // Componentes para o Background Espacial Caótico
+        const FloatingReview = ({ top, left, delay, coverColor }) => (
+            <div className="floating-review" style={{ top, left, animation: `drift 10s infinite alternate ease-in-out ${delay}` }}>
+                <div className="mini-cover" style={{ background: coverColor }}></div>
+                <div style={{ fontSize: '12px', color: '#888' }}>[...]</div>
+                <style>{`
+                    @keyframes drift { 0% { transform: translateY(0); } 100% { transform: translateY(-15px) rotate(3deg); } }
+                `}</style>
+            </div>
+        );
+
+        function SoundExplorer() {
+            const reviewText = "This album makes me feel like I'm floating on a dancefloor in Saturn. One More Time is a masterpiece.";
+            
+            return (
+                <React.Fragment>
+                    {/* SEÇÃO 1: CREATION */}
+                    <div className="creation-section">
+                        <div className="section-header">"Creation"</div>
+                        
+                        <div className="active-album-box">
+                            <div className="album-cover-pixel"></div>
+                            <div className="album-info-creation">
+                                <span className="album-info-title">Daft Punk - Discovery</span>
+                                <span className="album-info-dropdown">
+                                    Select Album... <span style={{fontSize: '14px'}}>▶</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className="review-input-container">
+                            <div className="review-text-content">
+                                {reviewText}<span className="cursor"></span>
+                            </div>
+                        </div>
+
+                        <div className="mood-grid">
+                            {MOODS.map(mood => (
+                                <div className="mood-item" key={mood.id}>
+                                    <span className="mood-icon">{mood.icon}</span>
+                                    <span className="mood-label">{mood.label}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        <button className="launch-btn">
+                            LAUNCH INTO SPACE
+                        </button>
+                    </div>
+
+                    {/* SEÇÃO 2: CHAOS SCROLL */}
+                    <div className="chaos-section">
+
+                        <div className="chaos-space">
+                            <div className="orbit-ring orbit-1"></div>
+                            <div className="orbit-ring orbit-2"></div>
+
+                            {/* Cards flutuantes no fundo */}
+                            <FloatingReview top="10%" left="15%" delay="0s" coverColor="#555" />
+                            <FloatingReview top="70%" left="5%" delay="1s" coverColor="#234" />
+                            <FloatingReview top="15%" left="80%" delay="2s" coverColor="#912" />
+                            <FloatingReview top="80%" left="75%" delay="0.5s" coverColor="#146" />
+                            <FloatingReview top="40%" left="85%" delay="1.5s" coverColor="#040" />
+
+                            {/* O POST ATIVO */}
+                            <div className="active-post-spotlight">
+                                <div className="spotlight-header">
+                                    <div className="spotlight-cover"></div>
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '4px'}}>
+                                        <div className="spotlight-title">In Rainbows</div>
+                                        <div className="spotlight-artist">Radiohead</div>
+                                    </div>
+                                </div>
+                                
+                                <div className="spotlight-text">
+                                    Mergulho profundo na melancolia imersiva. Uma obra-prima de produção. Cuidado com o oxigênio! A transição rítmica em "15 Step" ainda quebra minha mente.
+                                </div>
+                                
+                                <div className="spotlight-footer">
+                                    <div className="stars">★★★★★</div>
+                                    <div className="sentiment-badge">SENTIMENTO ATUAL: MELANCHOLY</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* PERFIL */}
+                        <div className="user-profile">
+                            <div className="avatar-box">🤺</div>
+                            <div className="profile-details">
+                                <div className="player-level">SOUND EXPLORER LV. 1</div>
+                                <div className="xp-bar-wrapper">
+                                    <span className="xp-label">XP</span>
+                                    <div className="xp-bar-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </React.Fragment>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<SoundExplorer />);
+    </script>
+</body>
+
+</html>
