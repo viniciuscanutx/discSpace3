@@ -95,7 +95,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       sentiment: state.customSentiment || '',
       icon: state.selectedIcon,
       rating: state.rating,
-      username: 'AstroNauta_Br',
+      username: 'testeUser',
       xp: Math.floor(Math.random() * 50) + 10
     }
 

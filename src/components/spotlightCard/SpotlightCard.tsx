@@ -7,6 +7,7 @@ interface SpotlightCardProps {
 }
 
 export function SpotlightCard({ review, onClose }: SpotlightCardProps) {
+  
   const renderStars = (count: number) => {
     return '\u2605'.repeat(count) + '\u2606'.repeat(5 - count)
   }
