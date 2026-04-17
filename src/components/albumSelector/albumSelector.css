@@ -1,0 +1,111 @@
+.active-album-box {
+    background: rgba(15, 15, 15, 0.85);
+    border: 1px solid var(--border-gray);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.album-cover-pixel {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #000;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    image-rendering: auto;
+    position: relative;
+}
+
+.cover-fallback-empty {
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.album-fallback-vinyl {
+    width: 80px;
+    height: 80px;
+    background:
+        radial-gradient(circle, #000 0%, #000 8%, transparent 8%),
+        radial-gradient(circle, #222 8%, #111 28%, transparent 28%),
+        repeating-radial-gradient(circle, #0a0a0a 0%, #0a0a0a 3px, #1a1a1a 4px, #0a0a0a 5px);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #333, 0 0 10px rgba(255, 255, 255, 0.05);
+    animation: spin-vinyl 4s linear infinite;
+}
+
+.album-info-creation {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.album-info-title {
+    font-family: var(--pixel-font);
+    font-size: 26px;
+    color: #fff;
+    text-shadow: 1px 1px 0 #000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.album-info-artist {
+    color: var(--cyan-neon);
+    font-size: 14px;
+    font-family: var(--text-font);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.album-info-date {
+    color: var(--light-gray);
+    font-size: 12px;
+    font-family: var(--text-font);
+}
+
+.clear-selection-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: #888;
+    cursor: pointer;
+    font-size: 16px;
+    transition: color 0.1s;
+    z-index: 20;
+    user-select: none;
+}
+
+.clear-selection-btn:hover {
+    color: #ff3333;
+    transform: scale(1.2);
+}
+
+.empty-selection-msg {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.empty-title {
+    font-family: var(--pixel-font);
+    font-size: 20px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.empty-subtitle {
+    font-family: var(--text-font);
+    font-size: 11px;
+    color: #888;
+}

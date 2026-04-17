@@ -9,6 +9,7 @@ export function UserProfile({ username, level, xpProgress }: UserProfileProps) {
     <div className="user-profile">
       <div className="avatar-box">🤺</div>
       <div className="profile-details">
+        <div className="user-name">{username}</div>
         <div className="player-level">SOUND EXPLORER LV. {level}</div>
         <div className="xp-bar-wrapper">
           <span className="xp-label">XP</span>

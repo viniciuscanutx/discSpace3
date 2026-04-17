@@ -1,5 +1,6 @@
 import type { ItunesResult, SelectedAlbum } from '../../types'
 import { SearchBar } from '../searchBBar/SearchBar'
+import './albumSelector.css'
 
 interface AlbumSelectorProps {
   selectedAlbum: SelectedAlbum | null
@@ -18,11 +19,13 @@ export function AlbumSelector({ selectedAlbum, onSelect, onClear }: AlbumSelecto
         >✖</div>
       )}
       <div
-        className={`album-cover-pixel ${!selectedAlbum?.coverUrl ? 'cover-fallback' : ''}`}
+        className={`album-cover-pixel ${!selectedAlbum?.coverUrl ? 'cover-fallback-empty' : ''}`}
         style={selectedAlbum?.coverUrl ? { backgroundImage: `url(${selectedAlbum.coverUrl})` } : {}}
-      ></div>
+      >
+        {!selectedAlbum?.coverUrl && <div className="album-fallback-vinyl"></div>}
+      </div>
       <div className="album-info-creation">
-        {selectedAlbum && (
+        {selectedAlbum ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0 }}>
             <span className="album-info-title" title={selectedAlbum.title}>{selectedAlbum.title}</span>
             {selectedAlbum.type === 'track' && selectedAlbum.collectionName && selectedAlbum.collectionName !== selectedAlbum.title && (
@@ -37,6 +40,11 @@ export function AlbumSelector({ selectedAlbum, onSelect, onClear }: AlbumSelecto
               </span>
             </span>
             <span className="album-info-date">{selectedAlbum.releaseDate}</span>
+          </div>
+        ) : (
+          <div className="empty-selection-msg">
+            <span className="empty-title">Ainda não selecionado</span>
+            <span className="empty-subtitle">Busque uma música ou álbum abaixo</span>
           </div>
         )}
         <SearchBar onSelect={onSelect} />
