@@ -24,10 +24,16 @@ export function SearchBar({ onSelect }: SearchBarProps) {
     searchTimeoutRef.current = setTimeout(async () => {
       setIsSearching(true)
       try {
-        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&media=music&limit=15`
+        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&entity=musicTrack,album&limit=15`
         const response = await fetch(url)
         const data = await response.json()
-        setSearchResults(data.results || [])
+        const allResults = data.results || []
+
+        const filteredResults = allResults.filter(item =>
+          item.wrapperType === 'track' || item.wrapperType === 'collection'
+        )
+        
+        setSearchResults(filteredResults)
       } catch (err) {
         console.error('Falha na busca:', err)
       } finally {
@@ -41,7 +47,7 @@ export function SearchBar({ onSelect }: SearchBarProps) {
     <div style={{ position: 'relative', marginTop: '8px' }}>
       <input
         className="search-input"
-        placeholder="Musica ou Album..."
+        placeholder="Música ou Álbum..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
