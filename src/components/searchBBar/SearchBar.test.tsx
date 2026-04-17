@@ -1,14 +1,14 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { SearchBar } from './SearchBar'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 describe('SearchBar', () => {
   const mockOnSelect = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
-    // Mock fetch for iTunes API
-    global.fetch = vi.fn()
+    globalThis.fetch = vi.fn()
   })
 
   afterEach(() => {
@@ -29,22 +29,22 @@ describe('SearchBar', () => {
 
     // Wait to ensure no fetch is called
     await waitFor(() => {
-      expect(global.fetch).not.toHaveBeenCalled()
+      expect(globalThis.fetch).not.toHaveBeenCalled()
     })
   })
 
   it('calls fetch API when input has 3+ characters', async () => {
     const user = userEvent.setup({ delay: null })
-    ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      json: () => Promise.resolve({ results: [] }),
-    })
+      ; (globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        json: () => Promise.resolve({ results: [] }),
+      })
 
     render(<SearchBar onSelect={mockOnSelect} />)
     const input = screen.getByPlaceholderText('Musica ou Album...')
     await user.type(input, 'rad')
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalled()
+      expect(globalThis.fetch).toHaveBeenCalled()
     }, { timeout: 2000 })
   })
 
@@ -57,9 +57,9 @@ describe('SearchBar', () => {
       artworkUrl100: 'http://example.com/cover.jpg',
       wrapperType: 'track',
     }
-    ;(global.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
-      json: () => Promise.resolve({ results: [mockResult] }),
-    })
+      ; (globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue({
+        json: () => Promise.resolve({ results: [mockResult] }),
+      })
 
     const user = userEvent.setup({ delay: null })
     render(<SearchBar onSelect={mockOnSelect} />)
