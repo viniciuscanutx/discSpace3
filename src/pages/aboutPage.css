@@ -1,0 +1,118 @@
+/* ── About Page ──────────────────────────────────────── */
+.about-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.about-content {
+    max-width: 600px;
+    background: rgba(10, 10, 10, 0.95);
+    border: 1px solid var(--border-gray);
+    padding: 40px;
+    text-align: center;
+}
+
+.about-header {
+    margin-bottom: 32px;
+}
+
+.about-title {
+    font-family: var(--pixel-font);
+    font-size: 52px;
+    color: var(--cyan-neon);
+    text-shadow: 0 0 20px var(--cyan-glow);
+    margin-bottom: 8px;
+}
+
+.about-subtitle {
+    font-family: var(--text-font);
+    font-size: 14px;
+    color: var(--light-gray);
+}
+
+.about-section {
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+.about-section-title {
+    font-family: var(--pixel-font);
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 12px;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.about-text {
+    font-family: var(--text-font);
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.7;
+}
+
+.about-steps {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.about-steps li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--text-font);
+    font-size: 14px;
+    color: #ccc;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: rgba(0, 243, 255, 0.1);
+    border: 1px solid var(--cyan-neon);
+    color: var(--cyan-neon);
+    font-family: var(--pixel-font);
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.about-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tech-tag {
+    font-family: var(--text-font);
+    font-size: 12px;
+    color: var(--cyan-neon);
+    border: 1px solid var(--border-gray);
+    padding: 4px 10px;
+    background: rgba(0, 243, 255, 0.05);
+}
+
+.about-back-btn {
+    display: inline-block;
+    margin-top: 16px;
+    font-family: var(--pixel-font);
+    font-size: 16px;
+    color: var(--cyan-neon);
+    text-decoration: none;
+    padding: 8px 20px;
+    border: 1px solid var(--cyan-neon);
+    transition: all 0.2s;
+}
+
+.about-back-btn:hover {
+    background: var(--cyan-neon);
+    color: #000;
+    box-shadow: 0 0 12px var(--cyan-glow);
+}
