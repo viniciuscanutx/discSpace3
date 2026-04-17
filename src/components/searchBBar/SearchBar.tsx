@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import type { ItunesResult } from '../types'
+import type { ItunesResult } from '../../types'
 
 interface SearchBarProps {
   onSelect: (item: ItunesResult) => void

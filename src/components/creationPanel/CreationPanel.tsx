@@ -1,6 +1,6 @@
-import type { ItunesResult, SelectedAlbum, Review } from '../types'
-import { AlbumSelector } from './AlbumSelector'
-import { ReviewEditor } from './ReviewEditor'
+import type { ItunesResult, SelectedAlbum } from '../../types'
+import { AlbumSelector } from '../albumSelector/AlbumSelector'
+import { ReviewEditor } from '../reviewEditor/ReviewEditor'
 
 interface CreationPanelProps {
   selectedAlbum: SelectedAlbum | null

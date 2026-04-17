@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { AVAILABLE_ICONS } from '../constants'
+import { AVAILABLE_ICONS } from '../../constants'
 
 interface ReviewEditorProps {
   reviewText: string

@@ -1,6 +1,6 @@
-import type { Review, ChaosReview } from '../types'
-import { FloatingReview } from './FloatingReview'
-import { SpotlightCard } from './SpotlightCard'
+import type { Review, ChaosReview } from '../../types'
+import { FloatingReview } from '../floatingReview/FloatingReview'
+import { SpotlightCard } from '../spotlightCard/SpotlightCard'
 
 interface ChaosSpaceProps {
   activePost: Review | null
@@ -12,7 +12,6 @@ interface ChaosSpaceProps {
 
 export function ChaosSpace({
   activePost,
-  onPostSelect,
   onPostClose,
   chaosReviews,
   onFloatingSelect,

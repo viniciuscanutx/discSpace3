@@ -12,7 +12,8 @@ export const MOCK_DATA: Review[] = [
     rating: 5,
     username: 'GalacticVibe',
     coverUrl: 'https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/4a/4c/cb/4a4ccbb2-b67f-4b07-dded-d39b8b1effa6/191428135080.jpg/400x400cc.jpg',
-    xp: 45
+    xp: 45,
+    previewUrl:'https://audio-previews.itunes.apple.com/preview/1440871384/preview.mp3'
   },
   {
     id: 2,
@@ -26,6 +27,7 @@ export const MOCK_DATA: Review[] = [
     rating: 5,
     username: 'StarBoy_BR',
     coverUrl: 'https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/7f/8a/40/7f8a403d-946d-9f67-888e-5543494e3046/190758758131.jpg/400x400cc.jpg',
-    xp: 30
+    xp: 30,
+    previewUrl:'https://audio-previews.itunes.apple.com/preview/1440871384/preview.mp3'
   }
 ]

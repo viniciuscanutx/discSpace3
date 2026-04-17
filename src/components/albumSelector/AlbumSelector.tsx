@@ -1,5 +1,5 @@
-import type { ItunesResult, SelectedAlbum } from '../types'
-import { SearchBar } from './SearchBar'
+import type { ItunesResult, SelectedAlbum } from '../../types'
+import { SearchBar } from '../searchBBar/SearchBar'
 
 interface AlbumSelectorProps {
   selectedAlbum: SelectedAlbum | null

@@ -1,4 +1,4 @@
-import type { Review } from '../types'
+import type { Review } from '../../types'
 
 interface FloatingReviewProps {
   top: string
