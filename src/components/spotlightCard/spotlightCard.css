@@ -1,0 +1,124 @@
+.active-post-spotlight {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1.1);
+    background: rgba(10, 10, 10, 0.94);
+    border: 1px solid #333;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    padding: 24px;
+    width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 20;
+    overflow: hidden;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1.1) translateY(0);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.1) translateY(-10px);
+    }
+}
+
+.spotlight-header {
+    display: flex;
+    gap: 16px;
+}
+
+.spotlight-cover {
+    width: 80px;
+    height: 80px;
+    background-size: cover;
+    border: 1px solid #444;
+    flex-shrink: 0;
+}
+
+.spotlight-title {
+    font-family: var(--pixel-font);
+    font-size: 28px;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.spotlight-artist {
+    color: #fff;
+    font-size: 20px;
+}
+
+.type-badge {
+    font-family: var(--pixel-font);
+    font-size: 14px;
+    color: #aaa;
+    margin-left: 12px;
+    background: #111;
+    border: 1px solid #333;
+    padding: 2px 6px;
+    vertical-align: middle;
+}
+
+.vinyl-record {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 160px;
+    height: 160px;
+    background:
+        radial-gradient(circle, #000 0%, #000 8%, transparent 8%),
+        radial-gradient(circle, #222 8%, #111 28%, transparent 28%),
+        repeating-radial-gradient(circle, #0a0a0a 0%, #0a0a0a 3px, #1a1a1a 4px, #0a0a0a 5px);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #333, 0 0 30px rgba(255, 255, 255, 0.02);
+    z-index: 5;
+    animation: spin-vinyl 4s linear infinite;
+}
+
+.spotlight-text {
+    font-family: var(--text-font);
+    font-size: 14px;
+    color: #ddd;
+    line-height: 1.5;
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.spotlight-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px dashed #444;
+    padding-top: 12px;
+}
+
+.stars {
+    color: var(--yellow-star);
+    font-size: 18px;
+    user-select: none;
+}
+
+.sentiment-badge {
+    font-family: var(--pixel-font);
+    color: #fff;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 16px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+}

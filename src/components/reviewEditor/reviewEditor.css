@@ -1,0 +1,136 @@
+/* A CAIXA EXCLUSIVA DE REVIEW (Neon Azul) */
+.review-input-container {
+    flex: 1;
+    min-height: 180px;
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid var(--border-gray);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s;
+}
+
+.review-input-container:focus-within {
+    border-color: #555;
+    border-color: #fff;
+}
+
+.review-text-area {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-family: var(--text-font);
+    font-size: 16px;
+    line-height: 1.6;
+    resize: none;
+    flex: 1;
+    outline: none;
+}
+
+.rating-container {
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid var(--border-gray);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rating-label {
+    font-family: var(--pixel-font);
+    font-size: 18px;
+    color: var(--light-gray);
+}
+
+.stars-selector {
+    font-size: 24px;
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 4px;
+    color: #fff;
+}
+
+.stars-selector span:hover {
+    opacity: 0.7;
+}
+
+.status-report-container {
+    background: rgba(10, 10, 10, 0.6);
+    border: 1px solid var(--border-gray);
+    padding: 16px;
+}
+
+.status-label {
+    color: var(--light-gray);
+    font-size: 20px;
+    text-transform: uppercase;
+    font-family: var(--pixel-font);
+}
+
+.status-input-row {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    height: 44px;
+    margin-top: 14px;
+}
+
+.selected-icon-box {
+    width: 44px;
+    background: #000;
+    border: 1px solid var(--border-gray);
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sentiment-text-input {
+    flex: 1;
+    background: rgba(10, 10, 10, 0.5);
+    border: 1px solid var(--border-gray);
+    padding: 0 12px;
+    color: #fff;
+    font-family: var(--pixel-font);
+    font-size: 18px;
+    text-transform: uppercase;
+    outline: none;
+}
+
+.sentiment-text-input:focus {
+    border-color: #fff;
+}
+
+.icon-picker-popup {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    background: #111;
+    border: 1px solid var(--border-gray);
+    padding: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    width: max-content;
+    z-index: 100;
+    margin-bottom: 8px;
+}
+
+.mini-icon {
+    cursor: pointer;
+    background: #222;
+    border: 1px solid #444;
+    padding: 8px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+
+.mini-icon:hover,
+.mini-icon.active {
+    border-color: #fff;
+    background: #333;
+}
