@@ -40,6 +40,8 @@ export function AboutPage() {
           </div>
         </div>
 
+        
+
         <Link to="/" className="about-back-btn">
           ← Voltar ao espaço
         </Link>
