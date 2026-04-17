@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react'
 import { useAppStore } from '../../store/useAppStore'
+import './AudioPlayer.css'
 
 export function AudioPlayer() {
   const { activePost, audioPlayer, setAudioPlaying, setAudioTime, setAudioDuration, setAudioVolume } = useAppStore()

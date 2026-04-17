@@ -1,6 +1,7 @@
 import type { Review, ChaosReview } from '../../types'
 import { FloatingReview } from '../floatingReview/FloatingReview'
 import { SpotlightCard } from '../spotlightCard/SpotlightCard'
+import './ChaosSpace.css'
 
 interface ChaosSpaceProps {
   activePost: Review | null

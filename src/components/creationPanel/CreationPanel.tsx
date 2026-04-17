@@ -1,6 +1,7 @@
 import type { ItunesResult, SelectedAlbum } from '../../types'
 import { AlbumSelector } from '../albumSelector/AlbumSelector'
 import { ReviewEditor } from '../reviewEditor/ReviewEditor'
+import './CreationPanel.css'
 
 interface CreationPanelProps {
   selectedAlbum: SelectedAlbum | null
@@ -33,7 +34,7 @@ export function CreationPanel({
 }: CreationPanelProps) {
   return (
     <div className="creation-section">
-      <div className="section-header">"Feeling"</div>
+      <div className="section-header">"Space"</div>
 
       <AlbumSelector
         selectedAlbum={selectedAlbum}

@@ -1,4 +1,5 @@
 import type { Review } from '../../types'
+import './SpotlightCard.css'
 
 interface SpotlightCardProps {
   review: Review

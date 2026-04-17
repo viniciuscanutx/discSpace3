@@ -1,3 +1,4 @@
+import './UserProfile.css'
 interface UserProfileProps {
   username: string
   level: number

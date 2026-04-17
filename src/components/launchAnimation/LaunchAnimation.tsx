@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import './LaunchAnimation.css'
 
 interface LaunchAnimationProps {
   active: boolean
