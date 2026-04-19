@@ -50,4 +50,4 @@ npm run test:coverage
 
 Este projeto é um *side-project* desenvolvido estritamente para propósitos de estudo, aprimoramento e experimentação técnica. O principal objetivo é testar conceitos de engenharia e UI/UX (como interações pesadas de DOM, hooks avançados e customização CSS) construindo algo puramente do zero. 
 
-A exploração e captação do acervo de tracks e álbuns está documentada para consultar a futura **[DiscSpace Sonic API](#)**. Os endpoints oficias (`https://api.discspace.local/v1/search`) ainda encontram-se em desenvolvimento; portanto as *requests* de metadados atuais funcionam sob wrappers que eventualmente assinarão o acesso a este serviço.
+A exploração e captação do acervo de tracks e álbuns está documentada para consultar a futura **[DiscSpace API](https://github.com/viniciuscanutx/discSpace-api)**. Os endpoints oficias (`https://api.discspace.local/v1/search`) ainda encontram-se em desenvolvimento; portanto as *requests* de metadados atuais funcionam sob wrappers que eventualmente assinarão o acesso a este serviço.
