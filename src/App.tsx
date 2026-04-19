@@ -1,25 +1,29 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAppStore } from './store/useAppStore'
-import { DEFAULT_USERNAME } from './constants'
 import { CreationPanel } from './components/creationPanel/CreationPanel'
 import { ChaosSpace } from './components/chaosSpace/ChaosSpace'
 import { UserProfile } from './components/userProfile/UserProfile'
 import { AudioPlayer } from './components/audioPlayer/AudioPlayer'
 import { LaunchAnimation } from './components/launchAnimation/LaunchAnimation'
 import { AboutPage } from './pages/AboutPage'
+import { LoginPage } from './pages/LoginPage'
 
 function HomeView() {
   const {
     selectedAlbum, reviewText, customSentiment, selectedIcon, rating,
-    activePost, chaosReviews, userXp, xpProgress, showLaunchAnimation,
+    activePost, chaosReviews, userXp, xpProgress, showLaunchAnimation, username,
     setSelectedAlbum, clearSelectedAlbum, setReviewText, setCustomSentiment,
     setSelectedIcon, setRating, setActivePost, launchReview, hideLaunchAnimation,
   } = useAppStore()
 
+  if (!username) {
+    return <Navigate to="/login" replace />
+  }
+
   return (
     <>
       <div className="about-link-container">
-        <a href="/about" className="about-link">ABOUT</a>
+        <a href="/about" className="about-link">SOBRE</a>
       </div>
 
       <CreationPanel
@@ -46,7 +50,7 @@ function HomeView() {
       />
 
       <UserProfile
-        username={DEFAULT_USERNAME}
+        username={username}
         level={userXp}
         xpProgress={xpProgress}
       />
@@ -62,6 +66,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomeView />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
     </BrowserRouter>

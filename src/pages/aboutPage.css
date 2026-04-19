@@ -1,18 +1,28 @@
 .about-page {
     min-height: 80vh;
-    width: 420px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px;
+    padding: 20px;
+    width: 100vw;
+    box-sizing: border-box;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -14vw;
 }
 
 .about-content {
-    max-width: 600px;
+    max-width: 800px;
     background: rgba(10, 10, 10, 0.95);
     border: 1px solid var(--border-gray);
-    padding: 40px;
+    padding: 60px;
     text-align: center;
+}
+
+.about-button-container {
+    margin-bottom: 60px;
+    text-align: right;
 }
 
 .about-header {

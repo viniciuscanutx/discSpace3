@@ -114,7 +114,16 @@ export function AudioPlayer() {
         onClick={togglePlayPause}
         title={audioPlayer.isPlaying ? 'Pause' : 'Play'}
       >
-        {audioPlayer.isPlaying ? '⏸' : '▶'}
+        {audioPlayer.isPlaying ? (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="0" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="6" y="4" width="4" height="16"></rect>
+            <rect x="14" y="4" width="4" height="16"></rect>
+          </svg>
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="0" strokeLinecap="round" strokeLinejoin="round" style={{ marginLeft: '3px' }}>
+            <polygon points="6 3 20 12 6 21 6 3"></polygon>
+          </svg>
+        )}
       </button>
 
       <div className="audio-progress-wrapper">

@@ -20,8 +20,10 @@ interface AppState {
     trackTitle: string
   }
   showLaunchAnimation: boolean
+  username: string
 
   // Actions
+  setUsername: (name: string) => void
   setSelectedAlbum: (album: ItunesResult) => void
   clearSelectedAlbum: () => void
   setReviewText: (text: string) => void
@@ -61,6 +63,12 @@ export const useAppStore = create<AppState>((set, get) => ({
     trackTitle: '',
   },
   showLaunchAnimation: false,
+  username: localStorage.getItem('discSpace_username') || '',
+
+  setUsername: (name) => {
+    localStorage.setItem('discSpace_username', name)
+    set({ username: name })
+  },
 
   setSelectedAlbum: (item) => set({
     selectedAlbum: {
@@ -95,7 +103,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       sentiment: state.customSentiment || '',
       icon: state.selectedIcon,
       rating: state.rating,
-      username: 'testeUser',
+      username: state.username || 'Space User',
       xp: Math.floor(Math.random() * 50) + 10
     }
 
