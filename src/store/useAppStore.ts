@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import type { SelectedAlbum, Review, ChaosReview, ItunesResult } from '../types'
-import { MOCK_DATA } from '../data/mockData'
+import type { SelectedAlbum, Review, ItunesResult, CreateReviewPayload } from '../types'
+import { getReviews, createReview as apiCreateReview, deleteReview as apiDeleteReview } from '../services/api'
 
 interface AppState {
   selectedAlbum: SelectedAlbum | null
@@ -9,7 +9,9 @@ interface AppState {
   selectedIcon: string
   rating: number
   activePost: Review | null
-  chaosReviews: ChaosReview[]
+  reviews: Review[]
+  reviewsLoading: boolean
+  reviewsError: string | null
   userXp: number
   xpProgress: number
   audioPlayer: {
@@ -31,8 +33,12 @@ interface AppState {
   setSelectedIcon: (icon: string) => void
   setRating: (rating: number) => void
   setActivePost: (post: Review | null) => void
-  launchReview: () => boolean
   hideLaunchAnimation: () => void
+
+  // API
+  fetchReviews: () => Promise<void>
+  submitReview: () => Promise<boolean>
+  removeReview: (id: string) => Promise<boolean>
 
   // Audio
   setAudioPlaying: (playing: boolean) => void
@@ -48,13 +54,12 @@ export const useAppStore = create<AppState>((set, get) => ({
   customSentiment: '',
   selectedIcon: '👽',
   rating: 5,
-  activePost: MOCK_DATA[0],
-  chaosReviews: [
-    { id: 1, top: '10%', left: '15%', delay: '0s', review: MOCK_DATA[0] },
-    { id: 2, top: '70%', left: '40%', delay: '-2s', review: MOCK_DATA[1] }
-  ],
-  userXp: 1,
-  xpProgress: 20,
+  activePost: null,
+  reviews: [],
+  reviewsLoading: false,
+  reviewsError: null,
+  userXp: parseInt(localStorage.getItem('discSpace_userXp') || '1', 10),
+  xpProgress: parseInt(localStorage.getItem('discSpace_xpProgress') || '0', 10),
   audioPlayer: {
     isPlaying: false,
     volume: 0.15,
@@ -76,11 +81,12 @@ export const useAppStore = create<AppState>((set, get) => ({
       collectionName: item.collectionName,
       artist: item.artistName,
       coverUrl: item.artworkUrl100?.replace('100x100', '400x400') ?? '',
-      type: item.wrapperType,
+      type: item.wrapperType === 'collection' ? 'album' : 'sound',
       releaseDate: item.releaseDate ? item.releaseDate.substring(0, 4) : '',
       previewUrl: item.previewUrl || null
     }
   }),
+  
   clearSelectedAlbum: () => set({ selectedAlbum: null }),
   setReviewText: (text) => set({ reviewText: text }),
   setCustomSentiment: (sentiment) => set({ customSentiment: sentiment }),
@@ -88,58 +94,88 @@ export const useAppStore = create<AppState>((set, get) => ({
   setRating: (rating) => set({ rating }),
   setActivePost: (post) => set({ activePost: post }),
 
-  launchReview: () => {
+  hideLaunchAnimation: () => set({ showLaunchAnimation: false }),
+
+  // API
+  fetchReviews: async () => {
+    set({ reviewsLoading: true, reviewsError: null })
+    const response = await getReviews()
+    if (response.success && response.data) {
+      const mappedReviews: Review[] = response.data.map((r) => ({
+        id: parseInt(r.review_id, 10),
+        type: r.type,
+        album: r.album_name || r.title || '',
+        artist: r.artist,
+        coverUrl: r.cover_url,
+        previewUrl: r.preview_url,
+        text: r.text,
+        sentiment: r.sentiment,
+        icon: r.icon,
+        rating: parseFloat(r.rating),
+        username: r.username,
+        xp: r.xp,
+      }))
+      set({ reviews: mappedReviews, reviewsLoading: false })
+    } else {
+      set({ reviewsError: response.message, reviewsLoading: false })
+    }
+  },
+
+  submitReview: async () => {
     const state = get()
     if (!state.selectedAlbum || !state.reviewText.trim()) return false
 
-    const novoReview: Review = {
-      type: state.selectedAlbum.type,
-      album: state.selectedAlbum.title,
-      collectionName: state.selectedAlbum.collectionName,
+    const payload: CreateReviewPayload = {
+      album_name: state.selectedAlbum.title,
+      title: state.selectedAlbum.title,
       artist: state.selectedAlbum.artist,
-      coverUrl: state.selectedAlbum.coverUrl,
-      previewUrl: state.selectedAlbum.previewUrl,
-      text: state.reviewText,
+      cover_url: state.selectedAlbum.coverUrl,
+      preview_url: state.selectedAlbum.previewUrl,
+      rating: String(state.rating),
       sentiment: state.customSentiment || '',
+      text: state.reviewText,
       icon: state.selectedIcon,
-      rating: state.rating,
+      type: state.selectedAlbum.type as 'album' | 'sound',
       username: state.username || 'Space User',
-      xp: Math.floor(Math.random() * 50) + 10
     }
 
-    const newChaosItem: ChaosReview = {
-      id: Date.now(),
-      top: (Math.random() * 70 + 5) + '%',
-      left: (Math.random() * 75 + 5) + '%',
-      delay: -(Math.random() * 10) + 's',
-      review: novoReview
-    }
-
-    // XP
-    let newProgress = state.xpProgress + novoReview.xp
+    const xpEarned = Math.floor(Math.random() * 50) + 10
+    let newProgress = state.xpProgress + xpEarned
     let newUserXp = state.userXp
     if (newProgress >= 100) {
       newUserXp = state.userXp + 1
       newProgress = newProgress - 100
     }
 
-    set({
-      activePost: novoReview,
-      chaosReviews: [...state.chaosReviews, newChaosItem],
-      selectedAlbum: null,
-      reviewText: '',
-      customSentiment: '',
-      selectedIcon: '👽',
-      rating: 5,
-      userXp: newUserXp,
-      xpProgress: newProgress,
-      showLaunchAnimation: true,
-    })
+    localStorage.setItem('discSpace_userXp', String(newUserXp))
+    localStorage.setItem('discSpace_xpProgress', String(newProgress))
 
-    return true
+    const response = await apiCreateReview({ ...payload, xp: xpEarned })
+    if (response.success) {
+      set({
+        selectedAlbum: null,
+        reviewText: '',
+        customSentiment: '',
+        selectedIcon: '👽',
+        rating: 5,
+        userXp: newUserXp,
+        xpProgress: newProgress,
+        showLaunchAnimation: true,
+      })
+      await get().fetchReviews()
+      return true
+    }
+    return false
   },
 
-  hideLaunchAnimation: () => set({ showLaunchAnimation: false }),
+  removeReview: async (id: string) => {
+    const response = await apiDeleteReview(id)
+    if (response.success) {
+      set(state => ({ reviews: state.reviews.filter(r => r.id?.toString() !== id) }))
+      return true
+    }
+    return false
+  },
 
   // Audio
   setAudioPlaying: (playing) => set(state => ({ audioPlayer: { ...state.audioPlayer, isPlaying: playing } })),

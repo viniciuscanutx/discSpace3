@@ -43,3 +43,41 @@ export interface ChaosReview {
   delay: string
   review: Review
 }
+
+export interface ApiReview {
+  review_id: string
+  album_name: string
+  title: string
+  artist: string
+  cover_url: string
+  preview_url: string | null
+  price?: number
+  rating: string
+  sentiment: string
+  text: string
+  icon: string
+  type: 'album' | 'sound'
+  username: string
+  xp: number
+}
+
+export interface CreateReviewPayload {
+  album_name: string
+  title: string
+  artist: string
+  cover_url: string
+  preview_url?: string | null
+  rating: string
+  sentiment: string
+  text: string
+  icon: string
+  type: 'album' | 'sound'
+  username: string
+  xp?: number
+}
+
+export interface ApiResponse<T> {
+  success: boolean
+  message: string
+  data?: T
+}

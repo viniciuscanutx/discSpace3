@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import { useAppStore } from './store/useAppStore'
 import { CreationPanel } from './components/creationPanel/CreationPanel'
 import { ChaosSpace } from './components/chaosSpace/ChaosSpace'
@@ -11,10 +12,15 @@ import { LoginPage } from './pages/LoginPage'
 function HomeView() {
   const {
     selectedAlbum, reviewText, customSentiment, selectedIcon, rating,
-    activePost, chaosReviews, userXp, xpProgress, showLaunchAnimation, username,
+    activePost, reviews, userXp, xpProgress, showLaunchAnimation, username,
     setSelectedAlbum, clearSelectedAlbum, setReviewText, setCustomSentiment,
-    setSelectedIcon, setRating, setActivePost, launchReview, hideLaunchAnimation,
+    setSelectedIcon, setRating, setActivePost, submitReview, hideLaunchAnimation,
+    fetchReviews,
   } = useAppStore()
+
+  useEffect(() => {
+    fetchReviews()
+  }, [fetchReviews])
 
   if (!username) {
     return <Navigate to="/login" replace />
@@ -38,14 +44,14 @@ function HomeView() {
         onRatingChange={setRating}
         onSentimentChange={setCustomSentiment}
         onIconChange={setSelectedIcon}
-        onLaunch={launchReview}
+        onLaunch={submitReview}
       />
 
       <ChaosSpace
         activePost={activePost}
         onPostSelect={setActivePost}
         onPostClose={() => setActivePost(null)}
-        chaosReviews={chaosReviews}
+        reviews={reviews}
         onFloatingSelect={setActivePost}
       />
 

@@ -66,22 +66,6 @@
     vertical-align: middle;
 }
 
-.vinyl-record {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 160px;
-    height: 160px;
-    background:
-        radial-gradient(circle, #000 0%, #000 8%, transparent 8%),
-        radial-gradient(circle, #222 8%, #111 28%, transparent 28%),
-        repeating-radial-gradient(circle, #0a0a0a 0%, #0a0a0a 3px, #1a1a1a 4px, #0a0a0a 5px);
-    border-radius: 50%;
-    box-shadow: 0 0 0 1px #333, 0 0 30px rgba(255, 255, 255, 0.02);
-    z-index: 5;
-    animation: spin-vinyl 4s linear infinite;
-}
-
 .spotlight-text {
     font-family: var(--text-font);
     font-size: 14px;
