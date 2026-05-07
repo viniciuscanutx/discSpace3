@@ -17,7 +17,7 @@ export const MOCK_DATA: Review[] = [
   },
   {
     id: 2,
-    type: 'track',
+    type: 'sound',
     album: 'Nights',
     collectionName: 'blonde.',
     artist: 'Frank Ocean',

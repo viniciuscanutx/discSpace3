@@ -15,14 +15,14 @@ export interface SelectedAlbum {
   collectionName?: string
   artist: string
   coverUrl: string
-  type: string
+  type: 'album' | 'sound'
   releaseDate: string
   previewUrl: string | null
 }
 
 export interface Review {
   id?: number
-  type: string
+  type: 'album' | 'sound'
   album: string
   collectionName?: string
   artist: string

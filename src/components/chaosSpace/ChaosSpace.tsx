@@ -1,7 +1,15 @@
+import { useState, useEffect } from 'react'
 import type { Review } from '../../types'
 import { FloatingReview } from '../floatingReview/FloatingReview'
 import { SpotlightCard } from '../spotlightCard/SpotlightCard'
 import './ChaosSpace.css'
+
+interface FloatingItem {
+  review: Review
+  top: string
+  left: string
+  delay: string
+}
 
 interface ChaosSpaceProps {
   activePost: Review | null
@@ -17,6 +25,18 @@ export function ChaosSpace({
   reviews,
   onFloatingSelect,
 }: ChaosSpaceProps) {
+  const [floatingItems, setFloatingItems] = useState<FloatingItem[]>([])
+
+  useEffect(() => {
+    const items = reviews.map((review) => ({
+      review,
+      top: `${Math.random() * 70 + 5}%`,
+      left: `${Math.random() * 75 + 5}%`,
+      delay: `-${Math.random() * 10}s`,
+    }))
+    setFloatingItems(items)
+  }, [reviews])
+
   return (
     <div className="chaos-space">
       <div className="disc-container">
@@ -26,13 +46,13 @@ export function ChaosSpace({
       </div>
 
       <div className="reviews-container">
-        {reviews.map((review, index) => (
+        {floatingItems.map((item, index) => (
           <FloatingReview
-            key={review.id || index}
-            top={`${10 + (index % 5) * 15}%`}
-            left={`${10 + (index % 4) * 20}%`}
-            delay={`-${index * 0.5}s`}
-            review={review}
+            key={item.review.id || index}
+            top={item.top}
+            left={item.left}
+            delay={item.delay}
+            review={item.review}
             onSelect={onFloatingSelect}
           />
         ))}

@@ -22,6 +22,13 @@ function HomeView() {
     fetchReviews()
   }, [fetchReviews])
 
+  useEffect(() => {
+    if (reviews.length > 0 && !activePost) {
+      const randomReview = reviews[Math.floor(Math.random() * reviews.length)]
+      setActivePost(randomReview)
+    }
+  }, [reviews])
+
   if (!username) {
     return <Navigate to="/login" replace />
   }

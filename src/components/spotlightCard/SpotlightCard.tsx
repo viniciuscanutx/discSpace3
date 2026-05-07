@@ -39,7 +39,7 @@ export function SpotlightCard({ review, onClose }: SpotlightCardProps) {
           <div className="spotlight-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={review.album}>
             {review.album}
           </div>
-          {review.type === 'track' && review.collectionName && review.collectionName !== review.album && (
+          {review.type === 'sound' && review.collectionName && review.collectionName !== review.album && (
             <div style={{ color: '#aaa', fontSize: '16px', fontFamily: 'var(--text-font)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={review.collectionName}>
               {review.collectionName}
             </div>
@@ -49,7 +49,7 @@ export function SpotlightCard({ review, onClose }: SpotlightCardProps) {
               {review.artist}
             </span>
             <span className="type-badge" style={{ flexShrink: 0, marginLeft: '8px' }}>
-              {review.type === 'track' ? '[MUSIC]' : '[ALBUM]'}
+              {review.type === 'sound' ? '[MUSIC]' : '[ALBUM]'}
             </span>
           </div>
         </div>

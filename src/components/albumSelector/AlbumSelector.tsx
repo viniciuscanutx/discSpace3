@@ -28,7 +28,7 @@ export function AlbumSelector({ selectedAlbum, onSelect, onClear }: AlbumSelecto
         {selectedAlbum ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0 }}>
             <span className="album-info-title" title={selectedAlbum.title}>{selectedAlbum.title}</span>
-            {selectedAlbum.type === 'track' && selectedAlbum.collectionName && selectedAlbum.collectionName !== selectedAlbum.title && (
+            {selectedAlbum.type === 'sound' && selectedAlbum.collectionName && selectedAlbum.collectionName !== selectedAlbum.title && (
               <span style={{ color: '#aaa', fontSize: '13px', fontFamily: 'var(--text-font)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={selectedAlbum.collectionName}>
                 {selectedAlbum.collectionName}
               </span>
@@ -36,7 +36,7 @@ export function AlbumSelector({ selectedAlbum, onSelect, onClear }: AlbumSelecto
             <span className="album-info-artist" style={{ display: 'flex', alignItems: 'center' }}>
               <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={selectedAlbum.artist}>{selectedAlbum.artist}</span>
               <span className="type-badge" style={{ flexShrink: 0, fontSize: '10px', padding: '1px 4px', marginLeft: '8px' }}>
-                {selectedAlbum.type === 'track' ? '[MUSIC]' : '[ALBUM]'}
+                {selectedAlbum.type === 'sound' ? '[MUSIC]' : '[ALBUM]'}
               </span>
             </span>
             <span className="album-info-date">{selectedAlbum.releaseDate}</span>
